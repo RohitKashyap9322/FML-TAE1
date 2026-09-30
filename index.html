@@ -1,0 +1,2695 @@
+<!DOCTYPE html> <html lang="en"> <head>
+<!-- =====================================================
+     1. PAGE INFORMATION
+====================================================== -->
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Retail Product Association Analysis</title>
+
+<!-- =====================================================
+     2. CSS START
+     All website styling is inside this file.
+====================================================== -->
+
+<style>
+
+    /* -----------------------------------------------------
+       BASIC RESET
+    ----------------------------------------------------- */
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* -----------------------------------------------------
+       BODY
+    ----------------------------------------------------- */
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+
+        background:
+            linear-gradient(
+                135deg,
+                #f5f7ff,
+                #f8f5ff
+            );
+
+        color: #1f2937;
+
+        min-height: 100vh;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* -----------------------------------------------------
+       COMMON CONTAINER
+    ----------------------------------------------------- */
+
+    .container {
+        width: 90%;
+        max-width: 1150px;
+
+        margin: auto;
+    }
+
+    /* =====================================================
+       NAVBAR
+    ====================================================== */
+
+    .navbar {
+        height: 70px;
+
+        background: rgba(255, 255, 255, 0.95);
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        padding: 0 6%;
+
+        position: sticky;
+
+        top: 0;
+
+        z-index: 1000;
+
+        box-shadow:
+            0 3px 15px
+            rgba(0, 0, 0, 0.08);
+    }
+
+    .logo {
+        font-size: 22px;
+
+        font-weight: bold;
+
+        color: #4f46e5;
+    }
+
+    .nav-links {
+        display: flex;
+
+        gap: 28px;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+
+        color: #374151;
+
+        font-size: 14px;
+
+        font-weight: bold;
+
+        transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+        color: #4f46e5;
+    }
+
+    /* =====================================================
+       HERO SECTION
+    ====================================================== */
+
+    .hero {
+        min-height: 520px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        text-align: center;
+
+        padding: 70px 20px;
+
+        position: relative;
+
+        overflow: hidden;
+
+        background:
+            linear-gradient(
+                135deg,
+                #eef2ff,
+                #f5f3ff,
+                #ffffff
+            );
+    }
+
+    /* Decorative circle */
+
+    .hero::before {
+        content: "";
+
+        position: absolute;
+
+        width: 280px;
+        height: 280px;
+
+        border-radius: 50%;
+
+        background: #c7d2fe;
+
+        opacity: 0.35;
+
+        top: -120px;
+        left: -100px;
+    }
+
+    .hero::after {
+        content: "";
+
+        position: absolute;
+
+        width: 320px;
+        height: 320px;
+
+        border-radius: 50%;
+
+        background: #ddd6fe;
+
+        opacity: 0.35;
+
+        right: -120px;
+        bottom: -150px;
+    }
+
+    .hero-content {
+        position: relative;
+
+        z-index: 2;
+
+        max-width: 850px;
+    }
+
+    .hero-icon {
+        font-size: 65px;
+
+        margin-bottom: 20px;
+    }
+
+    .hero h1 {
+        font-size: 48px;
+
+        line-height: 1.15;
+
+        color: #312e81;
+
+        margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+        color: #4f46e5;
+    }
+
+    .hero p {
+        font-size: 17px;
+
+        line-height: 1.8;
+
+        color: #64748b;
+    }
+
+    .start-button {
+        display: inline-block;
+
+        margin-top: 30px;
+
+        padding: 14px 28px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #4f46e5,
+                #7c3aed
+            );
+
+        color: white;
+
+        text-decoration: none;
+
+        border-radius: 10px;
+
+        font-weight: bold;
+
+        transition: 0.3s;
+    }
+
+    .start-button:hover {
+        transform: translateY(-3px);
+
+        box-shadow:
+            0 12px 25px
+            rgba(79, 70, 229, 0.3);
+    }
+
+    /* =====================================================
+       SECTION
+    ====================================================== */
+
+    .section {
+        padding: 55px 0;
+    }
+
+    .section-title {
+        text-align: center;
+
+        margin-bottom: 30px;
+    }
+
+    .section-title h2 {
+        font-size: 30px;
+
+        color: #312e81;
+
+        margin-bottom: 10px;
+    }
+
+    .section-title p {
+        color: #64748b;
+    }
+
+    /* =====================================================
+       CARD
+    ====================================================== */
+
+    .card {
+        background: white;
+
+        border-radius: 18px;
+
+        padding: 30px;
+
+        border: 1px solid #e5e7eb;
+
+        box-shadow:
+            0 8px 30px
+            rgba(0, 0, 0, 0.06);
+
+        margin-bottom: 25px;
+
+        transition: 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+
+        box-shadow:
+            0 15px 35px
+            rgba(0, 0, 0, 0.08);
+    }
+
+    /* =====================================================
+       DATASET INFORMATION
+    ====================================================== */
+
+    .dataset-info {
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+        gap: 18px;
+
+        margin-bottom: 25px;
+    }
+
+    .info-box {
+        background: #f8fafc;
+
+        border-radius: 12px;
+
+        padding: 18px;
+
+        text-align: center;
+
+        border: 1px solid #e5e7eb;
+    }
+
+    .info-box .icon {
+        font-size: 30px;
+
+        margin-bottom: 8px;
+    }
+
+    .info-box h3 {
+        color: #4f46e5;
+
+        font-size: 25px;
+
+        margin-bottom: 5px;
+    }
+
+    .info-box p {
+        color: #64748b;
+
+        font-size: 13px;
+    }
+
+    /* =====================================================
+       UPLOAD BOX
+    ====================================================== */
+
+    .upload-box {
+        text-align: center;
+
+        padding: 45px 20px;
+
+        border: 2px dashed #a5b4fc;
+
+        background: #fafaff;
+
+        border-radius: 15px;
+    }
+
+    .upload-icon {
+        font-size: 55px;
+
+        margin-bottom: 15px;
+    }
+
+    .upload-box h3 {
+        margin-bottom: 10px;
+
+        color: #374151;
+    }
+
+    .upload-box p {
+        color: #64748b;
+
+        line-height: 1.6;
+
+        margin-bottom: 20px;
+    }
+
+    /* Hide actual file input */
+
+    #csvFile {
+        display: none;
+    }
+
+    /* Custom upload button */
+
+    .upload-button {
+        display: inline-block;
+
+        padding: 12px 22px;
+
+        background: #4f46e5;
+
+        color: white;
+
+        border-radius: 8px;
+
+        cursor: pointer;
+
+        font-weight: bold;
+    }
+
+    .upload-button:hover {
+        background: #3730a3;
+    }
+
+    .file-name {
+        margin-top: 15px;
+
+        color: #16a34a;
+
+        font-weight: bold;
+
+        min-height: 20px;
+    }
+
+    .demo-button {
+        margin-top: 15px;
+
+        padding: 10px 18px;
+
+        border: 1px solid #4f46e5;
+
+        background: white;
+
+        color: #4f46e5;
+
+        border-radius: 8px;
+
+        cursor: pointer;
+
+        font-weight: bold;
+    }
+
+    .demo-button:hover {
+        background: #eef2ff;
+    }
+
+    /* =====================================================
+       SETTINGS
+    ====================================================== */
+
+    .settings-grid {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 25px;
+    }
+
+    .setting-box {
+        background: #f8fafc;
+
+        padding: 20px;
+
+        border-radius: 12px;
+
+        border: 1px solid #e5e7eb;
+    }
+
+    .setting-box label {
+        display: flex;
+
+        justify-content: space-between;
+
+        margin-bottom: 15px;
+
+        font-weight: bold;
+    }
+
+    .setting-value {
+        color: #4f46e5;
+    }
+
+    input[type="range"] {
+        width: 100%;
+
+        accent-color: #4f46e5;
+
+        cursor: pointer;
+    }
+
+    /* =====================================================
+       ANALYZE BUTTON
+    ====================================================== */
+
+    .analyze-button {
+        width: 100%;
+
+        padding: 15px;
+
+        margin-top: 25px;
+
+        border: none;
+
+        border-radius: 9px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #4f46e5,
+                #7c3aed
+            );
+
+        color: white;
+
+        font-size: 16px;
+
+        font-weight: bold;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .analyze-button:hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 10px 25px
+            rgba(79, 70, 229, 0.3);
+    }
+
+    /* =====================================================
+       DASHBOARD
+    ====================================================== */
+
+    #dashboard {
+        display: none;
+
+        animation:
+            fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+
+        from {
+            opacity: 0;
+
+            transform:
+                translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+
+            transform:
+                translateY(0);
+        }
+
+    }
+
+    /* =====================================================
+       STATISTICS
+    ====================================================== */
+
+    .stats-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(4, 1fr);
+
+        gap: 18px;
+
+        margin-bottom: 25px;
+    }
+
+    .stat-card {
+        background: white;
+
+        padding: 25px;
+
+        text-align: center;
+
+        border-radius: 15px;
+
+        border: 1px solid #e5e7eb;
+
+        box-shadow:
+            0 8px 25px
+            rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-icon {
+        font-size: 32px;
+
+        margin-bottom: 10px;
+    }
+
+    .stat-card h3 {
+        font-size: 30px;
+
+        color: #4f46e5;
+
+        margin-bottom: 5px;
+    }
+
+    .stat-card p {
+        color: #64748b;
+
+        font-size: 13px;
+    }
+
+    /* =====================================================
+       TABLE HEADER
+    ====================================================== */
+
+    .table-header {
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        gap: 15px;
+
+        margin-bottom: 20px;
+    }
+
+    .table-header h2 {
+        color: #312e81;
+    }
+
+    .table-actions {
+        display: flex;
+
+        gap: 8px;
+    }
+
+    .search-box {
+        padding: 10px 13px;
+
+        border: 1px solid #d1d5db;
+
+        border-radius: 8px;
+
+        outline: none;
+    }
+
+    .search-box:focus {
+        border-color: #4f46e5;
+    }
+
+    .download-button {
+        padding: 10px 15px;
+
+        border: none;
+
+        border-radius: 8px;
+
+        background: #16a34a;
+
+        color: white;
+
+        font-weight: bold;
+
+        cursor: pointer;
+    }
+
+    .download-button:hover {
+        background: #15803d;
+    }
+
+    /* =====================================================
+       TABLE
+    ====================================================== */
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+
+        border-collapse: collapse;
+
+        min-width: 700px;
+    }
+
+    th {
+        padding: 14px;
+
+        background: #eef2ff;
+
+        color: #312e81;
+
+        text-align: left;
+
+        font-size: 13px;
+    }
+
+    td {
+        padding: 14px;
+
+        border-bottom:
+            1px solid #e5e7eb;
+
+        font-size: 14px;
+    }
+
+    tbody tr:hover {
+        background: #f9fafb;
+    }
+
+    /* =====================================================
+       BADGES
+    ====================================================== */
+
+    .badge {
+        display: inline-block;
+
+        padding: 5px 10px;
+
+        border-radius: 20px;
+
+        font-size: 12px;
+
+        font-weight: bold;
+    }
+
+    .support-badge {
+        background: #dbeafe;
+
+        color: #1d4ed8;
+    }
+
+    .confidence-badge {
+        background: #dcfce7;
+
+        color: #15803d;
+    }
+
+    .lift-badge {
+        background: #f3e8ff;
+
+        color: #7e22ce;
+    }
+
+    /* =====================================================
+       INSIGHTS + CHART
+    ====================================================== */
+
+    .bottom-grid {
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 25px;
+    }
+
+    .bottom-grid h2 {
+        color: #312e81;
+
+        margin-bottom: 20px;
+    }
+
+    .insight {
+        padding: 14px;
+
+        background: #f8fafc;
+
+        border-left:
+            4px solid #4f46e5;
+
+        border-radius: 8px;
+
+        margin-bottom: 12px;
+
+        font-size: 14px;
+
+        line-height: 1.6;
+    }
+
+    /* =====================================================
+       CHART
+    ====================================================== */
+
+    .chart {
+        height: 280px;
+
+        display: flex;
+
+        align-items: flex-end;
+
+        justify-content: space-around;
+
+        gap: 12px;
+
+        padding: 20px 5px 50px;
+
+        border-bottom:
+            1px solid #d1d5db;
+    }
+
+    .bar-container {
+        height: 100%;
+
+        flex: 1;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: flex-end;
+
+        flex-direction: column;
+
+        position: relative;
+    }
+
+    .bar {
+        width: 50px;
+
+        max-width: 80%;
+
+        background:
+            linear-gradient(
+                to top,
+                #4f46e5,
+                #8b5cf6
+            );
+
+        border-radius:
+            7px 7px 0 0;
+
+        position: relative;
+
+        transition: 0.3s;
+    }
+
+    .bar:hover {
+        background:
+            linear-gradient(
+                to top,
+                #3730a3,
+                #7c3aed
+            );
+    }
+
+    .bar-value {
+        position: absolute;
+
+        top: -23px;
+
+        left: 50%;
+
+        transform:
+            translateX(-50%);
+
+        font-size: 11px;
+
+        font-weight: bold;
+
+        color: #4f46e5;
+    }
+
+    .bar-label {
+        position: absolute;
+
+        bottom: -42px;
+
+        left: 50%;
+
+        transform:
+            translateX(-50%);
+
+        width: 100px;
+
+        text-align: center;
+
+        font-size: 10px;
+
+        color: #64748b;
+    }
+
+    /* =====================================================
+       FOOTER
+    ====================================================== */
+
+    footer {
+        background: #111827;
+
+        color: #9ca3af;
+
+        text-align: center;
+
+        padding: 35px 20px;
+
+        margin-top: 50px;
+    }
+
+    footer h3 {
+        color: white;
+
+        margin-bottom: 8px;
+    }
+
+    /* =====================================================
+       MOBILE RESPONSIVE DESIGN
+    ====================================================== */
+
+    @media (max-width: 850px) {
+
+        .stats-grid {
+            grid-template-columns:
+                repeat(2, 1fr);
+        }
+
+        .bottom-grid {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+    @media (max-width: 650px) {
+
+        .navbar {
+            height: 60px;
+        }
+
+        .nav-links {
+            display: none;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+        }
+
+        .hero p {
+            font-size: 15px;
+        }
+
+        .settings-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .table-header {
+            flex-direction: column;
+
+            align-items: stretch;
+        }
+
+        .table-actions {
+            flex-direction: column;
+        }
+
+        .search-box {
+            width: 100%;
+        }
+
+        .download-button {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+<!-- =====================================================
+     CSS END
+====================================================== -->
+
+</head> <body> <!-- ===================================================== 3. NAVIGATION BAR ====================================================== --> <nav class="navbar">
+<div class="logo">
+    🛒 RetailAI
+</div>
+
+<div class="nav-links">
+
+    <a href="#dataset">
+        Dataset
+    </a>
+
+    <a href="#analysis">
+        Analysis
+    </a>
+
+    <a href="#dashboard">
+        Dashboard
+    </a>
+
+</div>
+
+</nav> <!-- ===================================================== 4. HERO SECTION ====================================================== --> <section class="hero">
+<div class="hero-content">
+
+    <div class="hero-icon">
+        🛒📊
+    </div>
+
+    <h1>
+
+        Retail Product
+        <span>Association Analysis</span>
+
+    </h1>
+
+    <p>
+
+        Analyze shopping transactions and discover
+        which products are frequently purchased together.
+
+        The system calculates Support, Confidence
+        and Lift to identify useful product associations.
+
+    </p>
+
+    <a
+        href="#dataset"
+        class="start-button"
+    >
+
+        🚀 Explore Analysis
+
+    </a>
+
+</div>
+
+</section> <!-- ===================================================== 5. MAIN CONTENT ====================================================== --> <main class="container">
+<!-- =================================================
+     DATASET SECTION
+================================================== -->
+
+<section
+    id="dataset"
+    class="section"
+>
+
+    <div class="section-title">
+
+        <h2>
+            📁 Retail Transaction Dataset
+        </h2>
+
+        <p>
+            A built-in sample dataset is already available.
+        </p>
+
+    </div>
+
+    <div class="card">
+
+        <!-- Dataset Information -->
+
+        <div class="dataset-info">
+
+            <div class="info-box">
+
+                <div class="icon">
+                    🛍️
+                </div>
+
+                <h3 id="datasetTransactions">
+                    30
+                </h3>
+
+                <p>
+                    Transactions
+                </p>
+
+            </div>
+
+            <div class="info-box">
+
+                <div class="icon">
+                    📦
+                </div>
+
+                <h3 id="datasetProducts">
+                    12
+                </h3>
+
+                <p>
+                    Products
+                </p>
+
+            </div>
+
+            <div class="info-box">
+
+                <div class="icon">
+                    🤖
+                </div>
+
+                <h3>
+                    Ready
+                </h3>
+
+                <p>
+                    Analysis Model
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- Upload Box -->
+
+        <div class="upload-box">
+
+            <div class="upload-icon">
+                📂
+            </div>
+
+            <h3>
+                Upload Your Own CSV
+            </h3>
+
+            <p>
+
+                CSV should contain
+                <strong>TransactionID</strong>
+                and
+                <strong>Product</strong>
+                columns.
+
+            </p>
+
+            <label
+                for="csvFile"
+                class="upload-button"
+            >
+
+                Choose CSV File
+
+            </label>
+
+            <input
+                type="file"
+                id="csvFile"
+                accept=".csv"
+            >
+
+            <div
+                id="fileName"
+                class="file-name"
+            ></div>
+
+            <button
+                class="demo-button"
+                onclick="useBuiltInDataset()"
+            >
+
+                🧪 Use Built-in Dataset
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =================================================
+     6. ANALYSIS SETTINGS
+================================================== -->
+
+<section
+    id="analysis"
+    class="section"
+>
+
+    <div class="section-title">
+
+        <h2>
+            ⚙️ Analysis Settings
+        </h2>
+
+        <p>
+            Set the minimum values used for association rules.
+        </p>
+
+    </div>
+
+    <div class="card">
+
+        <div class="settings-grid">
+
+            <!-- Minimum Support -->
+
+            <div class="setting-box">
+
+                <label>
+
+                    <span>
+                        Minimum Support
+                    </span>
+
+                    <span
+                        id="supportValue"
+                        class="setting-value"
+                    >
+                        20%
+                    </span>
+
+                </label>
+
+                <input
+                    type="range"
+                    id="support"
+                    min="1"
+                    max="100"
+                    value="20"
+                    oninput="updateSettings()"
+                >
+
+            </div>
+
+            <!-- Minimum Confidence -->
+
+            <div class="setting-box">
+
+                <label>
+
+                    <span>
+                        Minimum Confidence
+                    </span>
+
+                    <span
+                        id="confidenceValue"
+                        class="setting-value"
+                    >
+                        30%
+                    </span>
+
+                </label>
+
+                <input
+                    type="range"
+                    id="confidence"
+                    min="1"
+                    max="100"
+                    value="30"
+                    oninput="updateSettings()"
+                >
+
+            </div>
+
+        </div>
+
+        <!-- Analyze Button -->
+
+        <button
+            class="analyze-button"
+            onclick="runAnalysis()"
+        >
+
+            🔍 Analyze Transactions
+
+        </button>
+
+    </div>
+
+</section>
+
+<!-- =================================================
+     7. DASHBOARD
+================================================== -->
+
+<section
+    id="dashboard"
+    class="section"
+>
+
+    <!-- =================================================
+         STATISTICS
+    ================================================== -->
+
+    <div class="stats-grid">
+
+        <!-- Transactions -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🛍️
+            </div>
+
+            <h3 id="totalTransactions">
+                0
+            </h3>
+
+            <p>
+                Total Transactions
+            </p>
+
+        </div>
+
+        <!-- Products -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📦
+            </div>
+
+            <h3 id="totalProducts">
+                0
+            </h3>
+
+            <p>
+                Unique Products
+            </p>
+
+        </div>
+
+        <!-- Rules -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🔗
+            </div>
+
+            <h3 id="totalRules">
+                0
+            </h3>
+
+            <p>
+                Association Rules
+            </p>
+
+        </div>
+
+        <!-- Strong Rules -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ⭐
+            </div>
+
+            <h3 id="strongRules">
+                0
+            </h3>
+
+            <p>
+                Strong Rules
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- =================================================
+         ASSOCIATION RULE TABLE
+    ================================================== -->
+
+    <div class="card">
+
+        <div class="table-header">
+
+            <h2>
+                🔗 Product Associations
+            </h2>
+
+            <div class="table-actions">
+
+                <input
+                    type="text"
+                    id="searchBox"
+                    class="search-box"
+                    placeholder="Search product..."
+                    onkeyup="searchResults()"
+                >
+
+                <button
+                    class="download-button"
+                    onclick="downloadCSV()"
+                >
+
+                    ⬇ Download
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            #
+                        </th>
+
+                        <th>
+                            Product A
+                        </th>
+
+                        <th>
+                            Product B
+                        </th>
+
+                        <th>
+                            Support
+                        </th>
+
+                        <th>
+                            Confidence
+                        </th>
+
+                        <th>
+                            Lift
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody
+                    id="resultsTable"
+                >
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- =================================================
+         8. INSIGHTS + CHART
+    ================================================== -->
+
+    <div class="bottom-grid">
+
+        <!-- INSIGHTS -->
+
+        <div class="card">
+
+            <h2>
+                💡 Business Insights
+            </h2>
+
+            <div id="insights">
+
+            </div>
+
+        </div>
+
+        <!-- CHART -->
+
+        <div class="card">
+
+            <h2>
+                📈 Top Product Associations
+            </h2>
+
+            <div
+                id="chart"
+                class="chart"
+            >
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main> <!-- ===================================================== 9. FOOTER ====================================================== --> <footer>
+<h3>
+    🛒 RetailAI
+</h3>
+
+<p>
+    Retail Product Association Analysis
+</p>
+
+<p>
+    Association Rule Mining using Support,
+    Confidence and Lift
+</p>
+
+</footer> <!-- ===================================================== 10. JAVASCRIPT START
+ This section contains the actual analysis logic.
+
+====================================================== -->
+
+<script>
+/* =========================================================
+PART A — BUILT-IN RETAIL DATASET
+
+Each array represents one customer's shopping basket.
+
+Example:
+
+["Milk", "Bread", "Butter"]
+
+means one customer purchased all three products.
+========================================================= */
+
+const builtInDataset = [
+
+["Milk", "Bread", "Butter"],
+["Milk", "Bread"],
+["Milk", "Eggs"],
+["Bread", "Butter"],
+["Milk", "Bread", "Eggs"],
+
+["Bread", "Butter", "Jam"],
+["Milk", "Bread", "Butter"],
+["Milk", "Eggs"],
+["Bread", "Butter"],
+["Milk", "Bread", "Jam"],
+
+["Milk", "Bread", "Butter"],
+["Bread", "Eggs"],
+["Milk", "Bread"],
+["Milk", "Butter"],
+["Bread", "Butter", "Jam"],
+
+["Milk", "Bread", "Eggs"],
+["Milk", "Bread"],
+["Bread", "Butter"],
+["Milk", "Eggs", "Butter"],
+["Milk", "Bread", "Butter"],
+
+["Coffee", "Sugar"],
+["Coffee", "Milk"],
+["Coffee", "Sugar", "Milk"],
+["Tea", "Sugar"],
+["Tea", "Milk"],
+
+["Coffee", "Biscuits"],
+["Coffee", "Milk", "Sugar"],
+["Tea", "Biscuits"],
+["Milk", "Bread", "Butter"],
+["Coffee", "Sugar", "Biscuits"]
+
+];
+
+/* =========================================================
+PART B — CURRENT TRANSACTION DATA
+
+At first we use the built-in dataset.
+========================================================= */
+
+let transactions =
+[...builtInDataset];
+
+/* =========================================================
+PART C — ASSOCIATION RULE RESULTS
+========================================================= */
+
+let associationRules = [];
+
+/* =========================================================
+PART D — LOAD BUILT-IN DATASET
+========================================================= */
+
+function useBuiltInDataset() {
+
+transactions =
+    [...builtInDataset];
+
+document.getElementById(
+    "fileName"
+).innerText =
+    "✓ Built-in retail dataset loaded";
+
+updateDatasetInformation();
+
+alert(
+    "Built-in retail dataset loaded successfully!"
+);
+
+}
+
+/* =========================================================
+PART E — UPDATE DATASET INFORMATION
+========================================================= */
+
+function updateDatasetInformation() {
+
+const uniqueProducts =
+    getUniqueProducts();
+
+document.getElementById(
+    "datasetTransactions"
+).innerText =
+    transactions.length;
+
+document.getElementById(
+    "datasetProducts"
+).innerText =
+    uniqueProducts.length;
+
+}
+
+/* =========================================================
+PART F — GET UNIQUE PRODUCTS
+========================================================= */
+
+function getUniqueProducts() {
+
+const productSet =
+    new Set();
+
+transactions.forEach(
+    basket => {
+
+        basket.forEach(
+            product => {
+
+                productSet.add(
+                    product
+                );
+
+            }
+        );
+
+    }
+);
+
+return Array.from(
+    productSet
+);
+
+}
+
+/* =========================================================
+PART G — CSV FILE UPLOAD
+========================================================= */
+
+document
+.getElementById("csvFile")
+.addEventListener(
+"change",
+function(event) {
+
+        const file =
+            event.target.files[0];
+
+        if (!file) {
+
+            return;
+
+        }
+
+        document.getElementById(
+            "fileName"
+        ).innerText =
+            "✓ " + file.name +
+            " selected";
+
+        const reader =
+            new FileReader();
+
+        reader.onload =
+            function(event) {
+
+                readCSV(
+                    event.target.result
+                );
+
+            };
+
+        reader.readAsText(file);
+
+    }
+);
+
+/* =========================================================
+PART H — READ CSV DATA
+========================================================= */
+
+function readCSV(csvText) {
+
+const rows =
+    csvText
+        .trim()
+        .split(/\r?\n/)
+        .map(
+            row =>
+            row.split(",")
+        );
+
+if (rows.length < 2) {
+
+    alert(
+        "CSV file does not contain enough data."
+    );
+
+    return;
+
+}
+
+const headers =
+    rows[0].map(
+        header =>
+        header
+            .trim()
+            .toLowerCase()
+    );
+
+let transactionColumn =
+    headers.indexOf(
+        "transactionid"
+    );
+
+let productColumn =
+    headers.indexOf(
+        "product"
+    );
+
+/* Also accept common alternative names */
+
+if (
+    transactionColumn === -1
+) {
+
+    transactionColumn =
+        headers.indexOf(
+            "transaction"
+        );
+
+}
+
+if (
+    productColumn === -1
+) {
+
+    productColumn =
+        headers.indexOf(
+            "item"
+        );
+
+}
+
+if (
+    transactionColumn === -1 ||
+    productColumn === -1
+) {
+
+    alert(
+        "CSV must contain TransactionID and Product columns."
+    );
+
+    return;
+
+}
+
+const transactionMap = {};
+
+/* Convert rows into shopping baskets */
+
+for (
+    let i = 1;
+    i < rows.length;
+    i++
+) {
+
+    const transactionID =
+        rows[i][transactionColumn]
+            ?.trim();
+
+    const product =
+        rows[i][productColumn]
+            ?.trim();
+
+    if (
+        !transactionID ||
+        !product
+    ) {
+
+        continue;
+
+    }
+
+    if (
+        !transactionMap[
+            transactionID
+        ]
+    ) {
+
+        transactionMap[
+            transactionID
+        ] = [];
+
+    }
+
+    if (
+        !transactionMap[
+            transactionID
+        ].includes(product)
+    ) {
+
+        transactionMap[
+            transactionID
+        ].push(product);
+
+    }
+
+}
+
+transactions =
+    Object.values(
+        transactionMap
+    );
+
+updateDatasetInformation();
+
+alert(
+    "CSV uploaded successfully!\n\n" +
+    "Transactions: " +
+    transactions.length
+);
+
+}
+
+/* =========================================================
+PART I — UPDATE SLIDER VALUES
+========================================================= */
+
+function updateSettings() {
+
+const support =
+    document.getElementById(
+        "support"
+    ).value;
+
+const confidence =
+    document.getElementById(
+        "confidence"
+    ).value;
+
+document.getElementById(
+    "supportValue"
+).innerText =
+    support + "%";
+
+document.getElementById(
+    "confidenceValue"
+).innerText =
+    confidence + "%";
+
+}
+
+/* =========================================================
+PART J — MAIN ANALYSIS FUNCTION
+
+This is the core of our project.
+
+It calculates:
+
+Support
+
+Confidence
+
+Lift
+========================================================= */
+
+function runAnalysis() {
+
+/* ---------------------------------------------
+   Check whether data exists
+--------------------------------------------- */
+
+if (
+    transactions.length === 0
+) {
+
+    alert(
+        "Please upload a dataset first."
+    );
+
+    return;
+
+}
+
+/* ---------------------------------------------
+   Get user settings
+--------------------------------------------- */
+
+const minimumSupport =
+    Number(
+        document.getElementById(
+            "support"
+        ).value
+    ) / 100;
+
+const minimumConfidence =
+    Number(
+        document.getElementById(
+            "confidence"
+        ).value
+    ) / 100;
+
+const totalTransactions =
+    transactions.length;
+
+/* ---------------------------------------------
+   Get all unique products
+--------------------------------------------- */
+
+const products =
+    getUniqueProducts();
+
+/* ---------------------------------------------
+   Count how many transactions
+   contain each product
+--------------------------------------------- */
+
+const productFrequency = {};
+
+products.forEach(
+    product => {
+
+        productFrequency[
+            product
+        ] = 0;
+
+    }
+);
+
+transactions.forEach(
+    basket => {
+
+        basket.forEach(
+            product => {
+
+                productFrequency[
+                    product
+                ]++;
+
+            }
+        );
+
+    }
+);
+
+/* Clear previous rules */
+
+associationRules = [];
+
+/* ---------------------------------------------
+   Compare every product with every other product
+--------------------------------------------- */
+
+for (
+    let i = 0;
+    i < products.length;
+    i++
+) {
+
+    for (
+        let j = 0;
+        j < products.length;
+        j++
+    ) {
+
+        /* Same product is not a rule */
+
+        if (i === j) {
+
+            continue;
+
+        }
+
+        const productA =
+            products[i];
+
+        const productB =
+            products[j];
+
+        /* -------------------------------------
+           Count transactions containing A + B
+        ------------------------------------- */
+
+        let pairCount = 0;
+
+        transactions.forEach(
+            basket => {
+
+                if (
+                    basket.includes(
+                        productA
+                    ) &&
+                    basket.includes(
+                        productB
+                    )
+                ) {
+
+                    pairCount++;
+
+                }
+
+            }
+        );
+
+        /* -------------------------------------
+           SUPPORT
+
+           Support =
+           Transactions containing A and B
+           ----------------------------------
+           Total transactions
+        ------------------------------------- */
+
+        const support =
+            pairCount /
+            totalTransactions;
+
+        /* -------------------------------------
+           CONFIDENCE
+
+           Confidence =
+           A + B transactions
+           -----------------
+           A transactions
+        ------------------------------------- */
+
+        const confidence =
+            productFrequency[
+                productA
+            ] > 0
+
+            ?
+
+            pairCount /
+            productFrequency[
+                productA
+            ]
+
+            :
+
+            0;
+
+        /* -------------------------------------
+           Support of Product B
+        ------------------------------------- */
+
+        const supportB =
+            productFrequency[
+                productB
+            ] /
+            totalTransactions;
+
+        /* -------------------------------------
+           LIFT
+
+           Lift =
+           Confidence(A → B)
+           -----------------
+           Support(B)
+        ------------------------------------- */
+
+        const lift =
+            supportB > 0
+
+            ?
+
+            confidence /
+            supportB
+
+            :
+
+            0;
+
+        /* -------------------------------------
+           Keep only rules that satisfy
+           minimum support and confidence
+        ------------------------------------- */
+
+        if (
+            support >= minimumSupport &&
+            confidence >= minimumConfidence
+        ) {
+
+            associationRules.push({
+
+                productA:
+                    productA,
+
+                productB:
+                    productB,
+
+                support:
+                    support,
+
+                confidence:
+                    confidence,
+
+                lift:
+                    lift
+
+            });
+
+        }
+
+    }
+
+}
+
+/* ---------------------------------------------
+   Sort rules by highest lift
+--------------------------------------------- */
+
+associationRules.sort(
+    (a, b) =>
+    b.lift - a.lift
+);
+
+/* ---------------------------------------------
+   Display dashboard
+--------------------------------------------- */
+
+displayDashboard(
+    totalTransactions,
+    products.length
+);
+
+}
+
+/* =========================================================
+PART K — DISPLAY DASHBOARD
+========================================================= */
+
+function displayDashboard(
+totalTransactions,
+totalProducts
+) {
+
+document.getElementById(
+    "dashboard"
+).style.display =
+    "block";
+
+/* Update statistics */
+
+document.getElementById(
+    "totalTransactions"
+).innerText =
+    totalTransactions;
+
+document.getElementById(
+    "totalProducts"
+).innerText =
+    totalProducts;
+
+document.getElementById(
+    "totalRules"
+).innerText =
+    associationRules.length;
+
+/* Strong rule = lift > 1 */
+
+const strongRules =
+    associationRules.filter(
+        rule =>
+        rule.lift > 1
+    ).length;
+
+document.getElementById(
+    "strongRules"
+).innerText =
+    strongRules;
+
+/* Display table */
+
+displayResults();
+
+/* Display insights */
+
+generateInsights();
+
+/* Display chart */
+
+generateChart();
+
+/* Scroll to dashboard */
+
+document.getElementById(
+    "dashboard"
+).scrollIntoView({
+
+    behavior: "smooth"
+
+});
+
+}
+
+/* =========================================================
+PART L — DISPLAY ASSOCIATION RULE TABLE
+========================================================= */
+
+function displayResults() {
+
+const table =
+    document.getElementById(
+        "resultsTable"
+    );
+
+table.innerHTML = "";
+
+/* No rules found */
+
+if (
+    associationRules.length === 0
+) {
+
+    table.innerHTML = `
+
+        <tr>
+
+            <td
+                colspan="6"
+                style="text-align:center;"
+            >
+
+                No association rules found.
+
+                <br><br>
+
+                Try lowering the
+                Support or Confidence.
+
+            </td>
+
+        </tr>
+
+    `;
+
+    return;
+
+}
+
+/* Create table rows */
+
+associationRules.forEach(
+    (rule, index) => {
+
+        const row =
+            document.createElement(
+                "tr"
+            );
+
+        row.innerHTML = `
+
+            <td>
+                ${index + 1}
+            </td>
+
+            <td>
+                <strong>
+                    ${rule.productA}
+                </strong>
+            </td>
+
+            <td>
+                <strong>
+                    ${rule.productB}
+                </strong>
+            </td>
+
+            <td>
+
+                <span
+                    class="badge support-badge"
+                >
+
+                    ${(rule.support * 100)
+                        .toFixed(1)}%
+
+                </span>
+
+            </td>
+
+            <td>
+
+                <span
+                    class="badge confidence-badge"
+                >
+
+                    ${(rule.confidence * 100)
+                        .toFixed(1)}%
+
+                </span>
+
+            </td>
+
+            <td>
+
+                <span
+                    class="badge lift-badge"
+                >
+
+                    ${rule.lift
+                        .toFixed(2)}
+
+                </span>
+
+            </td>
+
+        `;
+
+        table.appendChild(row);
+
+    }
+);
+
+}
+
+/* =========================================================
+PART M — GENERATE BUSINESS INSIGHTS
+========================================================= */
+
+function generateInsights() {
+
+const container =
+    document.getElementById(
+        "insights"
+    );
+
+container.innerHTML = "";
+
+/* If no rules */
+
+if (
+    associationRules.length === 0
+) {
+
+    container.innerHTML = `
+
+        <div class="insight">
+
+            ⚠️ No strong product relationships
+            were found.
+
+        </div>
+
+        <div class="insight">
+
+            💡 Try reducing the minimum
+            Support or Confidence.
+
+        </div>
+
+    `;
+
+    return;
+
+}
+
+/* Show top five rules */
+
+associationRules
+    .slice(0, 5)
+    .forEach(
+        (rule, index) => {
+
+            const box =
+                document.createElement(
+                    "div"
+                );
+
+            box.className =
+                "insight";
+
+            box.innerHTML = `
+
+                <strong>
+
+                    ${index + 1}.
+                    ${rule.productA}
+                    → 
+                    ${rule.productB}
+
+                </strong>
+
+                <br>
+
+                Customers who purchase
+
+                <strong>
+                    ${rule.productA}
+                </strong>
+
+                frequently also purchase
+
+                <strong>
+                    ${rule.productB}
+                </strong>.
+
+                <br>
+
+                Confidence:
+                ${(rule.confidence * 100)
+                    .toFixed(1)}%
+
+                &nbsp; | &nbsp;
+
+                Lift:
+                ${rule.lift.toFixed(2)}
+
+            `;
+
+            container.appendChild(
+                box
+            );
+
+        }
+    );
+
+}
+
+/* =========================================================
+PART N — CREATE BAR CHART
+========================================================= */
+
+function generateChart() {
+
+const chart =
+    document.getElementById(
+        "chart"
+    );
+
+chart.innerHTML = "";
+
+/* Take top six rules */
+
+const topRules =
+    associationRules.slice(
+        0,
+        6
+    );
+
+if (
+    topRules.length === 0
+) {
+
+    return;
+
+}
+
+/* Find highest lift */
+
+const maximumLift =
+    Math.max(
+        ...topRules.map(
+            rule =>
+            rule.lift
+        )
+    );
+
+/* Create bars */
+
+topRules.forEach(
+    rule => {
+
+        const container =
+            document.createElement(
+                "div"
+            );
+
+        container.className =
+            "bar-container";
+
+        const bar =
+            document.createElement(
+                "div"
+            );
+
+        bar.className =
+            "bar";
+
+        /* Convert lift into bar height */
+
+        const height =
+            Math.max(
+
+                30,
+
+                (
+                    rule.lift /
+                    maximumLift
+                ) * 180
+
+            );
+
+        bar.style.height =
+            height + "px";
+
+        bar.innerHTML = `
+
+            <span
+                class="bar-value"
+            >
+
+                ${rule.lift.toFixed(2)}
+
+            </span>
+
+            <span
+                class="bar-label"
+            >
+
+                ${rule.productA}
+                +
+                ${rule.productB}
+
+            </span>
+
+        `;
+
+        container.appendChild(
+            bar
+        );
+
+        chart.appendChild(
+            container
+        );
+
+    }
+);
+
+}
+
+/* =========================================================
+PART O — SEARCH ASSOCIATION RULES
+========================================================= */
+
+function searchResults() {
+
+const searchText =
+    document.getElementById(
+        "searchBox"
+    )
+    .value
+    .toLowerCase();
+
+const rows =
+    document.getElementById(
+        "resultsTable"
+    )
+    .getElementsByTagName(
+        "tr"
+    );
+
+for (
+    let row of rows
+) {
+
+    const text =
+        row.innerText
+            .toLowerCase();
+
+    if (
+        text.includes(
+            searchText
+        )
+    ) {
+
+        row.style.display =
+            "";
+
+    } else {
+
+        row.style.display =
+            "none";
+
+    }
+
+}
+
+}
+
+/* =========================================================
+PART P — DOWNLOAD RESULTS AS CSV
+========================================================= */
+
+function downloadCSV() {
+
+if (
+    associationRules.length === 0
+) {
+
+    alert(
+        "No results available for download."
+    );
+
+    return;
+
+}
+
+/* CSV header */
+
+let csv =
+    "Product A,Product B,Support,Confidence,Lift\n";
+
+/* Add every rule */
+
+associationRules.forEach(
+    rule => {
+
+        csv +=
+
+            `"${rule.productA}",` +
+
+            `"${rule.productB}",` +
+
+            `"${(
+                rule.support * 100
+            ).toFixed(2)}%",` +
+
+            `"${(
+                rule.confidence * 100
+            ).toFixed(2)}%",` +
+
+            `"${rule.lift.toFixed(2)}"\n`;
+
+    }
+);
+
+/* Create downloadable file */
+
+const blob =
+    new Blob(
+        [csv],
+        {
+            type:
+                "text/csv"
+        }
+    );
+
+const url =
+    URL.createObjectURL(
+        blob
+    );
+
+const link =
+    document.createElement(
+        "a"
+    );
+
+link.href = url;
+
+link.download =
+    "retail_association_results.csv";
+
+document.body.appendChild(
+    link
+);
+
+link.click();
+
+
+link.remove();
+
+
+URL.revokeObjectURL(
+    url
+);
+
+}
+
+/* =========================================================
+PART Q — START WITH BUILT-IN DATASET
+========================================================= */
+
+updateDatasetInformation();
+
+</script> <!-- ===================================================== JAVASCRIPT END ====================================================== --> </body> </html>
