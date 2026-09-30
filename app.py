@@ -1,7 +1,8 @@
-import streamlit as st
-import pandas as pd
-from itertools import combinations
 import io
+from itertools import combinations
+
+import pandas as pd
+import streamlit as st
 
 
 # ============================================================
@@ -12,7 +13,7 @@ st.set_page_config(
     page_title="Retail Product Association Analysis",
     page_icon="🛒",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
 
@@ -22,133 +23,103 @@ st.set_page_config(
 
 st.markdown(
     """
-    <style>
+<style>
 
-    /* Main background */
-    .stApp {
-        background: linear-gradient(
-            135deg,
-            #f5f7ff 0%,
-            #faf7ff 100%
-        );
-    }
+.stApp {
+    background: linear-gradient(135deg, #f5f7ff, #faf7ff);
+}
 
-    /* Sidebar */
-    section[data-testid="stSidebar"] {
-        background: #ffffff;
-    }
+.hero {
+    padding: 45px 30px;
+    border-radius: 25px;
+    text-align: center;
+    background: linear-gradient(135deg, #eef2ff, #f5f3ff);
+    border: 1px solid #ddd6fe;
+    margin-bottom: 30px;
+}
 
-    /* Main content */
-    .block-container {
-        padding-top: 2rem;
-        padding-bottom: 3rem;
-    }
+.hero-icon {
+    font-size: 60px;
+    margin-bottom: 10px;
+}
 
-    /* Titles */
-    h1, h2, h3 {
-        color: #312e81 !important;
-    }
+.hero-title {
+    font-size: 42px;
+    font-weight: 800;
+    color: #312e81;
+    margin-bottom: 10px;
+}
 
-    /* Hero container */
-    .hero-container {
-        background: linear-gradient(
-            135deg,
-            #eef2ff,
-            #f5f3ff
-        );
-        border: 1px solid #ddd6fe;
-        border-radius: 25px;
-        padding: 40px;
-        text-align: center;
-        margin-bottom: 30px;
-        box-shadow: 0 10px 35px rgba(79, 70, 229, 0.10);
-    }
+.hero-title span {
+    color: #4f46e5;
+}
 
-    .hero-title {
-        font-size: 42px;
-        font-weight: 800;
-        color: #312e81;
-        margin-bottom: 10px;
-    }
+.hero-description {
+    font-size: 17px;
+    color: #64748b;
+    max-width: 800px;
+    margin: auto;
+    line-height: 1.7;
+}
 
-    .hero-title-highlight {
-        color: #4f46e5;
-    }
+.info-card {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+}
 
-    .hero-description {
-        font-size: 17px;
-        color: #64748b;
-        line-height: 1.7;
-        max-width: 850px;
-        margin: auto;
-    }
+.info-icon {
+    font-size: 32px;
+}
 
-    /* Cards */
-    .card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 18px;
-        padding: 25px;
-        text-align: center;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
-        min-height: 150px;
-    }
+.info-number {
+    font-size: 30px;
+    font-weight: 800;
+    color: #4f46e5;
+    margin: 5px;
+}
 
-    .card-icon {
-        font-size: 34px;
-    }
+.info-label {
+    color: #64748b;
+    font-size: 14px;
+}
 
-    .card-number {
-        font-size: 30px;
-        font-weight: 800;
-        color: #4f46e5;
-        margin-top: 8px;
-    }
+.section-title {
+    color: #312e81;
+    font-size: 28px;
+    font-weight: 750;
+    margin-top: 20px;
+    margin-bottom: 8px;
+}
 
-    .card-label {
-        color: #64748b;
-        font-size: 14px;
-        margin-top: 5px;
-    }
+.section-description {
+    color: #64748b;
+    margin-bottom: 20px;
+}
 
-    /* Insight cards */
-    .insight-card {
-        background: #f8fafc;
-        border-left: 5px solid #4f46e5;
-        border-radius: 10px;
-        padding: 18px;
-        margin-bottom: 12px;
-        color: #374151;
-        line-height: 1.6;
-    }
+.insight-box {
+    background: #f8fafc;
+    border-left: 5px solid #4f46e5;
+    padding: 15px 18px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    color: #374151;
+    line-height: 1.6;
+}
 
-    /* Footer */
-    .footer-text {
-        text-align: center;
-        color: #64748b;
-        padding: 30px;
-        margin-top: 40px;
-    }
+.footer {
+    text-align: center;
+    padding: 30px;
+    margin-top: 40px;
+    color: #64748b;
+}
 
-    /* Buttons */
-    .stButton > button {
-        border-radius: 10px;
-        font-weight: 700;
-        width: 100%;
-    }
-
-    /* Metrics */
-    [data-testid="stMetric"] {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 15px;
-        padding: 15px;
-        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.04);
-    }
-
-    </style>
-    """,
-    unsafe_allow_html=True
+</style>
+""",
+    unsafe_allow_html=True,
 )
 
 
@@ -162,36 +133,31 @@ BUILT_IN_DATASET = [
     ["Milk", "Eggs"],
     ["Bread", "Butter"],
     ["Milk", "Bread", "Eggs"],
-
     ["Bread", "Butter", "Jam"],
     ["Milk", "Bread", "Butter"],
     ["Milk", "Eggs"],
     ["Bread", "Butter"],
     ["Milk", "Bread", "Jam"],
-
     ["Milk", "Bread", "Butter"],
     ["Bread", "Eggs"],
     ["Milk", "Bread"],
     ["Milk", "Butter"],
     ["Bread", "Butter", "Jam"],
-
     ["Milk", "Bread", "Eggs"],
     ["Milk", "Bread"],
     ["Bread", "Butter"],
     ["Milk", "Eggs", "Butter"],
     ["Milk", "Bread", "Butter"],
-
     ["Coffee", "Sugar"],
     ["Coffee", "Milk"],
     ["Coffee", "Sugar", "Milk"],
     ["Tea", "Sugar"],
     ["Tea", "Milk"],
-
     ["Coffee", "Biscuits"],
     ["Coffee", "Milk", "Sugar"],
     ["Tea", "Biscuits"],
     ["Milk", "Bread", "Butter"],
-    ["Coffee", "Sugar", "Biscuits"]
+    ["Coffee", "Sugar", "Biscuits"],
 ]
 
 
@@ -200,7 +166,6 @@ BUILT_IN_DATASET = [
 # ============================================================
 
 def get_unique_products(transactions):
-
     products = set()
 
     for basket in transactions:
@@ -217,32 +182,30 @@ def get_unique_products(transactions):
 def calculate_association_rules(
     transactions,
     minimum_support,
-    minimum_confidence
+    minimum_confidence,
 ):
 
-    total_transactions = len(transactions)
+    columns = [
+        "Product A",
+        "Product B",
+        "Support",
+        "Confidence",
+        "Lift",
+    ]
 
-    if total_transactions == 0:
-        return pd.DataFrame(
-            columns=[
-                "Product A",
-                "Product B",
-                "Support",
-                "Confidence",
-                "Lift"
-            ]
-        )
+    if not transactions:
+        return pd.DataFrame(columns=columns)
+
+    total_transactions = len(transactions)
 
     products = get_unique_products(transactions)
 
     product_frequency = {}
 
     for product in products:
-
         count = 0
 
         for basket in transactions:
-
             if product in basket:
                 count += 1
 
@@ -255,90 +218,69 @@ def calculate_association_rules(
         pair_count = 0
 
         for basket in transactions:
-
-            if (
-                product_a in basket
-                and
-                product_b in basket
-            ):
+            if product_a in basket and product_b in basket:
                 pair_count += 1
 
         if pair_count == 0:
             continue
 
-        support = (
-            pair_count /
-            total_transactions
-        )
+        support = pair_count / total_transactions
 
         confidence_a_to_b = (
-            pair_count /
-            product_frequency[product_a]
+            pair_count / product_frequency[product_a]
         )
 
         confidence_b_to_a = (
-            pair_count /
-            product_frequency[product_b]
+            pair_count / product_frequency[product_b]
         )
 
         support_a = (
-            product_frequency[product_a] /
-            total_transactions
+            product_frequency[product_a]
+            / total_transactions
         )
 
         support_b = (
-            product_frequency[product_b] /
-            total_transactions
+            product_frequency[product_b]
+            / total_transactions
         )
 
-        lift_a_to_b = (
-            confidence_a_to_b /
-            support_b
-        )
-
-        lift_b_to_a = (
-            confidence_b_to_a /
-            support_a
-        )
+        lift_a_to_b = confidence_a_to_b / support_b
+        lift_b_to_a = confidence_b_to_a / support_a
 
         if (
             support >= minimum_support
-            and
-            confidence_a_to_b >= minimum_confidence
+            and confidence_a_to_b >= minimum_confidence
         ):
-
             rules.append(
                 {
                     "Product A": product_a,
                     "Product B": product_b,
                     "Support": support,
                     "Confidence": confidence_a_to_b,
-                    "Lift": lift_a_to_b
+                    "Lift": lift_a_to_b,
                 }
             )
 
         if (
             support >= minimum_support
-            and
-            confidence_b_to_a >= minimum_confidence
+            and confidence_b_to_a >= minimum_confidence
         ):
-
             rules.append(
                 {
                     "Product A": product_b,
                     "Product B": product_a,
                     "Support": support,
                     "Confidence": confidence_b_to_a,
-                    "Lift": lift_b_to_a
+                    "Lift": lift_b_to_a,
                 }
             )
 
     rules.sort(
-        key=lambda item: item["Lift"],
-        reverse=True
+        key=lambda x: x["Lift"],
+        reverse=True,
     )
 
-    return pd.DataFrame(rules)
+    return pd.DataFrame(rules, columns=columns)
 
 
 # ============================================================
@@ -364,9 +306,6 @@ def read_csv_file(uploaded_file):
         elif "transaction" in columns:
             transaction_column = columns["transaction"]
 
-        elif "transaction_id" in columns:
-            transaction_column = columns["transaction_id"]
-
         product_column = None
 
         if "product" in columns:
@@ -377,8 +316,7 @@ def read_csv_file(uploaded_file):
 
         if (
             transaction_column is None
-            or
-            product_column is None
+            or product_column is None
         ):
 
             st.error(
@@ -391,8 +329,7 @@ def read_csv_file(uploaded_file):
             dataframe
             .groupby(transaction_column)[product_column]
             .apply(
-                lambda products:
-                list(
+                lambda products: list(
                     set(
                         products
                         .dropna()
@@ -422,7 +359,7 @@ def read_csv_file(uploaded_file):
 
 
 # ============================================================
-# CREATE DOWNLOAD FILE
+# CREATE CSV DOWNLOAD
 # ============================================================
 
 def create_download_file(results):
@@ -431,7 +368,7 @@ def create_download_file(results):
 
     results.to_csv(
         output,
-        index=False
+        index=False,
     )
 
     return output.getvalue()
@@ -443,29 +380,18 @@ def create_download_file(results):
 
 st.markdown(
     """
-    <div class="hero-container">
-
-        <div style="font-size:60px;">
-            🛒📊
-        </div>
-
-        <div class="hero-title">
-            Retail Product
-            <span class="hero-title-highlight">
-                Association Analysis
-            </span>
-        </div>
-
-        <div class="hero-description">
-            Analyze shopping transactions and discover
-            which products are frequently purchased together.
-            The system uses Association Rule Mining to calculate
-            Support, Confidence and Lift.
-        </div>
-
-    </div>
-    """,
-    unsafe_allow_html=True
+<div class="hero">
+<div class="hero-icon">🛒📊</div>
+<div class="hero-title">
+Retail Product <span>Association Analysis</span>
+</div>
+<div class="hero-description">
+Analyze shopping transactions and discover which products are frequently purchased together.
+The system uses Association Rule Mining to calculate Support, Confidence and Lift.
+</div>
+</div>
+""",
+    unsafe_allow_html=True,
 )
 
 
@@ -481,7 +407,7 @@ with st.sidebar:
 
     uploaded_file = st.file_uploader(
         "Upload your retail CSV",
-        type=["csv"]
+        type=["csv"],
     )
 
     if uploaded_file is not None:
@@ -502,6 +428,10 @@ with st.sidebar:
 
             transactions = BUILT_IN_DATASET
 
+            st.warning(
+                "Using built-in retail dataset."
+            )
+
     else:
 
         transactions = BUILT_IN_DATASET
@@ -510,20 +440,16 @@ with st.sidebar:
             "Using built-in retail dataset."
         )
 
-    st.markdown("---")
-
     st.markdown("### 🎯 Minimum Support")
 
     support_percent = st.slider(
         "Support (%)",
         min_value=1,
         max_value=100,
-        value=20
+        value=20,
     )
 
-    minimum_support = (
-        support_percent / 100
-    )
+    minimum_support = support_percent / 100
 
     st.markdown("### 🎯 Minimum Confidence")
 
@@ -531,7 +457,7 @@ with st.sidebar:
         "Confidence (%)",
         min_value=1,
         max_value=100,
-        value=30
+        value=30,
     )
 
     minimum_confidence = (
@@ -540,9 +466,9 @@ with st.sidebar:
 
     st.markdown("---")
 
-    analyze_button = st.button(
+    st.button(
         "🔍 Analyze Transactions",
-        use_container_width=True
+        use_container_width=True,
     )
 
 
@@ -554,11 +480,18 @@ unique_products = get_unique_products(
     transactions
 )
 
-st.header("📁 Dataset Overview")
-
-st.caption(
-    "A quick overview of the retail data currently being analyzed."
+st.markdown(
+    """
+<div class="section-title">
+📁 Dataset Overview
+</div>
+<div class="section-description">
+Current retail transaction dataset used for analysis.
+</div>
+""",
+    unsafe_allow_html=True,
 )
+
 
 col1, col2, col3 = st.columns(3)
 
@@ -567,23 +500,13 @@ with col1:
 
     st.markdown(
         f"""
-        <div class="card">
-
-            <div class="card-icon">
-                🛍️
-            </div>
-
-            <div class="card-number">
-                {len(transactions)}
-            </div>
-
-            <div class="card-label">
-                Total Transactions
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
+<div class="info-card">
+<div class="info-icon">🛍️</div>
+<div class="info-number">{len(transactions)}</div>
+<div class="info-label">Total Transactions</div>
+</div>
+""",
+        unsafe_allow_html=True,
     )
 
 
@@ -591,23 +514,13 @@ with col2:
 
     st.markdown(
         f"""
-        <div class="card">
-
-            <div class="card-icon">
-                📦
-            </div>
-
-            <div class="card-number">
-                {len(unique_products)}
-            </div>
-
-            <div class="card-label">
-                Unique Products
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
+<div class="info-card">
+<div class="info-icon">📦</div>
+<div class="info-number">{len(unique_products)}</div>
+<div class="info-label">Unique Products</div>
+</div>
+""",
+        unsafe_allow_html=True,
     )
 
 
@@ -615,28 +528,18 @@ with col3:
 
     st.markdown(
         """
-        <div class="card">
-
-            <div class="card-icon">
-                🤖
-            </div>
-
-            <div class="card-number">
-                Ready
-            </div>
-
-            <div class="card-label">
-                Association Analysis
-            </div>
-
-        </div>
-        """,
-        unsafe_allow_html=True
+<div class="info-card">
+<div class="info-icon">🤖</div>
+<div class="info-number">Ready</div>
+<div class="info-label">Association Analysis</div>
+</div>
+""",
+        unsafe_allow_html=True,
     )
 
 
 # ============================================================
-# TRANSACTION DATASET
+# DATASET TABLE
 # ============================================================
 
 with st.expander(
@@ -647,17 +550,15 @@ with st.expander(
 
     for transaction_number, basket in enumerate(
         transactions,
-        start=1
+        start=1,
     ):
 
         for product in basket:
 
             dataset_rows.append(
                 {
-                    "TransactionID":
-                        transaction_number,
-                    "Product":
-                        product
+                    "TransactionID": transaction_number,
+                    "Product": product,
                 }
             )
 
@@ -668,18 +569,18 @@ with st.expander(
     st.dataframe(
         dataset_dataframe,
         use_container_width=True,
-        hide_index=True
+        hide_index=True,
     )
 
 
 # ============================================================
-# ANALYSIS
+# RUN ANALYSIS
 # ============================================================
 
 results = calculate_association_rules(
     transactions,
     minimum_support,
-    minimum_confidence
+    minimum_confidence,
 )
 
 
@@ -687,10 +588,16 @@ results = calculate_association_rules(
 # ANALYSIS DASHBOARD
 # ============================================================
 
-st.header("📊 Analysis Dashboard")
-
-st.caption(
-    "Product relationships discovered from shopping transactions."
+st.markdown(
+    """
+<div class="section-title">
+📊 Analysis Dashboard
+</div>
+<div class="section-description">
+Product relationships discovered from shopping transactions.
+</div>
+""",
+    unsafe_allow_html=True,
 )
 
 
@@ -720,7 +627,7 @@ with stat1:
 
     st.metric(
         "🛍️ Transactions",
-        len(transactions)
+        len(transactions),
     )
 
 
@@ -728,7 +635,7 @@ with stat2:
 
     st.metric(
         "📦 Products",
-        len(unique_products)
+        len(unique_products),
     )
 
 
@@ -736,7 +643,7 @@ with stat3:
 
     st.metric(
         "🔗 Association Rules",
-        total_rules
+        total_rules,
     )
 
 
@@ -744,33 +651,35 @@ with stat4:
 
     st.metric(
         "⭐ Lift > 1 Rules",
-        strong_rules
+        strong_rules,
     )
 
 
 # ============================================================
-# PRODUCT ASSOCIATIONS
+# RESULTS
 # ============================================================
 
-st.subheader("🔗 Product Associations")
+st.markdown(
+    "### 🔗 Product Associations"
+)
 
 
 if total_rules == 0:
 
     st.warning(
         """
-        No association rules were found with the
-        current Support and Confidence settings.
+No association rules were found with the current
+Support and Confidence settings.
 
-        Try lowering the minimum values.
-        """
+Try lowering the minimum values.
+"""
     )
 
 else:
 
     search = st.text_input(
         "🔎 Search Product",
-        placeholder="Example: Milk"
+        placeholder="Example: Milk",
     )
 
     filtered_results = results.copy()
@@ -784,18 +693,20 @@ else:
             .str.lower()
             .str.contains(
                 search_lower,
-                na=False
+                na=False,
             )
             |
             filtered_results["Product B"]
             .str.lower()
             .str.contains(
                 search_lower,
-                na=False
+                na=False,
             )
         ]
 
-    display_results = filtered_results.copy()
+    display_results = (
+        filtered_results.copy()
+    )
 
     display_results["Support"] = (
         display_results["Support"] * 100
@@ -815,14 +726,14 @@ else:
         "#",
         range(
             1,
-            len(display_results) + 1
-        )
+            len(display_results) + 1,
+        ),
     )
 
     st.dataframe(
         display_results,
         use_container_width=True,
-        hide_index=True
+        hide_index=True,
     )
 
     csv_data = create_download_file(
@@ -833,7 +744,7 @@ else:
         label="⬇️ Download Results as CSV",
         data=csv_data,
         file_name="retail_association_results.csv",
-        mime="text/csv"
+        mime="text/csv",
     )
 
 
@@ -841,21 +752,24 @@ else:
 # BUSINESS INSIGHTS
 # ============================================================
 
-st.subheader("💡 Business Insights")
-
-st.caption(
-    "Automatically generated insights from the strongest associations."
+st.markdown(
+    "### 💡 Business Insights"
 )
 
 
 if total_rules == 0:
 
-    st.info(
-        "No strong product relationships were found with the current settings."
-    )
+    st.markdown(
+        """
+<div class="insight-box">
+⚠️ No strong product relationships were found with the current settings.
+</div>
 
-    st.info(
-        "Try reducing Minimum Support or Minimum Confidence."
+<div class="insight-box">
+💡 Try reducing Minimum Support or Minimum Confidence to discover more rules.
+</div>
+""",
+        unsafe_allow_html=True,
     )
 
 else:
@@ -878,37 +792,35 @@ else:
 
         st.markdown(
             f"""
-            <div class="insight-card">
+<div class="insight-box">
+<strong>
+🔗 {rule['Product A']} → {rule['Product B']}
+</strong>
 
-                <strong>
-                    🔗 {rule['Product A']} → {rule['Product B']}
-                </strong>
+<br><br>
 
-                <br><br>
+Customers who purchase
+<strong>{rule['Product A']}</strong>
+frequently also purchase
+<strong>{rule['Product B']}</strong>.
 
-                Customers who purchase
-                <strong>{rule['Product A']}</strong>
-                frequently also purchase
-                <strong>{rule['Product B']}</strong>.
+<br><br>
 
-                <br><br>
+Support:
+<strong>{support_text}</strong>
 
-                Support:
-                <strong>{support_text}</strong>
+&nbsp; | &nbsp;
 
-                &nbsp; | &nbsp;
+Confidence:
+<strong>{confidence_text}</strong>
 
-                Confidence:
-                <strong>{confidence_text}</strong>
+&nbsp; | &nbsp;
 
-                &nbsp; | &nbsp;
-
-                Lift:
-                <strong>{lift_text}</strong>
-
-            </div>
-            """,
-            unsafe_allow_html=True
+Lift:
+<strong>{lift_text}</strong>
+</div>
+""",
+            unsafe_allow_html=True,
         )
 
 
@@ -916,7 +828,9 @@ else:
 # TOP ASSOCIATION CHART
 # ============================================================
 
-st.subheader("📈 Top Product Associations")
+st.markdown(
+    "### 📈 Top Product Associations"
+)
 
 
 if total_rules > 0:
@@ -933,8 +847,9 @@ if total_rules > 0:
         + chart_data["Product B"]
     )
 
-    chart_data = chart_data.set_index(
-        "Association"
+    chart_data = (
+        chart_data
+        .set_index("Association")
     )
 
     st.bar_chart(
@@ -949,7 +864,7 @@ else:
 
 
 # ============================================================
-# METRIC EXPLANATION
+# METRICS EXPLANATION
 # ============================================================
 
 with st.expander(
@@ -958,64 +873,59 @@ with st.expander(
 
     st.markdown(
         """
-        ### Support
+### Support
 
-        Support tells us how frequently two products
-        appear together in all transactions.
+Support tells us how frequently two products
+appear together in all transactions.
 
-        **Formula:**
+**Formula:**
 
-        Support(A,B) =
-        Transactions containing A and B
-        ÷
-        Total Transactions
+Support(A,B) =
+Transactions containing A and B
+÷
+Total Transactions
 
+### Confidence
 
-        ### Confidence
+Confidence tells us how often Product B is
+purchased when Product A is purchased.
 
-        Confidence tells us how often Product B is
-        purchased when Product A is purchased.
+**Formula:**
 
-        **Formula:**
+Confidence(A → B) =
+Transactions containing A and B
+÷
+Transactions containing A
 
-        Confidence(A → B) =
-        Transactions containing A and B
-        ÷
-        Transactions containing A
+### Lift
 
+Lift measures how strongly two products are
+associated compared with their individual
+purchase frequencies.
 
-        ### Lift
+**Formula:**
 
-        Lift measures how strongly two products
-        are associated compared with their individual
-        purchase frequencies.
+Lift(A → B) =
+Confidence(A → B)
+÷
+Support(B)
 
-        **Formula:**
+### Interpretation
 
-        Lift(A → B) =
-        Confidence(A → B)
-        ÷
-        Support(B)
+**Lift > 1**
 
+The products have a positive association
+in the analyzed dataset.
 
-        ### Interpretation
+**Lift = 1**
 
-        **Lift > 1**
+The products behave approximately independently.
 
-        The products have a positive association
-        in the analyzed dataset.
+**Lift < 1**
 
-
-        **Lift = 1**
-
-        The products behave approximately independently.
-
-
-        **Lift < 1**
-
-        The products occur together less often than
-        expected from their individual frequencies.
-        """
+The products occur together less often than
+expected from their individual frequencies.
+"""
     )
 
 
@@ -1024,24 +934,12 @@ with st.expander(
 # ============================================================
 
 st.markdown(
-    "---"
-)
-
-st.markdown(
     """
-    <div class="footer-text">
-
-        <h3>🛒 RetailAI</h3>
-
-        <p>
-            Retail Product Association Analysis
-        </p>
-
-        <p>
-            Built with Python + Streamlit
-        </p>
-
-    </div>
-    """,
-    unsafe_allow_html=True
+<div class="footer">
+<h3>🛒 RetailAI</h3>
+<p>Retail Product Association Analysis</p>
+<p>Built with Python + Streamlit</p>
+</div>
+""",
+    unsafe_allow_html=True,
 )
