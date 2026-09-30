@@ -227,9 +227,9 @@ unsafe_allow_html=True
 )
 
 ============================================================
-4. BUILT-IN RETAIL DATASET
-Each list represents one customer's shopping basket.
-Example:
+
+
+
 ["Milk", "Bread", "Butter"]
 means one customer purchased:
 Milk + Bread + Butter
@@ -274,9 +274,7 @@ BUILT_IN_DATASET = [
 
 ]
 
-============================================================
-5. FUNCTION — GET UNIQUE PRODUCTS
-============================================================
+
 def get_unique_products(transactions):
 
 products = set()
@@ -289,13 +287,7 @@ for basket in transactions:
 
 return sorted(list(products))
 
-============================================================
-6. FUNCTION — ASSOCIATION RULE MINING
-This function calculates:
-Support
-Confidence
-Lift
-============================================================
+
 def calculate_association_rules(
 transactions,
 minimum_support,
